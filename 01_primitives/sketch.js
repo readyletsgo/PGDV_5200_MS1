@@ -1,37 +1,48 @@
-// global variables to keep track of mouse positions
+/*
+	keep track of the mouse click positions
+draw a polygon from all the mouse click positions
+*/
+
+
 var x = [];
 var y = [];
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
-    // center rectangles
-    rectMode(CENTER);
-    // half transparent red
-    fill(255, 0, 0, 128);
+	createCanvas(windowWidth,windowHeight);
 }
 
 function draw() {
-    background(150);
+	background(255);	
+	stroke(200,0,0);
+	
+	//draw a rectangle
+	fill(255,192,203);
+	// noFill();
+	rect(mouseX-100, mouseY-100, 200, 200, 20);
+	
+	// draw a line 	
+	line(0,0,mouseX, mouseY);
 
-    // line with one fixed end in coordinate system origin
-    line(0, 0, mouseX, mouseY);
+	// draw a polygon with the values
+	fill(100);
+	beginShape();
+	for(var i=0; i<x.length; i++){
+		vertex(x[i], y[i]);
+		// var coordinateText = x[i] + "," +y[i];
+		text(x[i] + "," +y[i], x[i], y[i]);
+	}
+	endShape(CLOSE);
 
-    // rectangle attached to mouse position
-    rect(mouseX, mouseY, 100, 100, 10);
- 
-    // polygon   
-    beginShape();
-    for(var i=0; i<x.length; i++) {
-        vertex(x[i], y[i]);
-        text(i, x[i], y[i]);
-    }
-    endShape(CLOSE);
 }
 
-// register for mouse released events called exactly once each release
-function mouseReleased() {
-    // add x and y component into dedicated array
-    x.push(mouseX);
-    y.push(mouseY);
-    console.log(x);
+function mouseReleased(){
+	// console.log("click: " + mouseX + ", " + mouseY);
+
+	append(x, mouseX);
+	append(y, mouseY);
+
+	console.log(x);
+	// x.push();
+
+
 }
