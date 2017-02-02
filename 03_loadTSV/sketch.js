@@ -19,7 +19,6 @@ function showData(data) {
             fill(0, 255, 0);
         else {
             fill(128);
-            // if we had two lines
         }
             
         text(amount + ' ' + unit + ' ' + item + ' - ' + source, width/2, rowHeight * (i + 1));

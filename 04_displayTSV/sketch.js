@@ -14,6 +14,10 @@ function showData(data) {
 	min = 1000000;
   	max = 0;
 
+  	// let's see what kind of values we get from this data set
+  	// var val2 = data.get(10, 3);
+  	// console.log(typeof val2);
+
   	// let's set mininum and maximum values for the data
   	// go through each row
 	for(row=0; row<rows; row++){
