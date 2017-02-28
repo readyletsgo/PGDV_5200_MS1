@@ -1,6 +1,7 @@
 // hash map for all words
-var hash = [];
-// hash map for all sorted words
+var hash = {};
+
+// 2D Array for the sorted words
 var sorted = [];
 var textX = 100;
 
@@ -11,11 +12,10 @@ function setup() {
 
 function callback(poem) {
   // log the whole thing
-  console.log(poem);
-  
+
   // log the individual lines
   for(var i in poem) {
-    console.log(i + ' : ' + poem[i]);
+    // console.log(i + ' : ' + poem[i]);
   }
 
   // go through each line
@@ -26,29 +26,34 @@ function callback(poem) {
       // go through each letter in each word
       for (var k in li) {
           // replace each of the letters we don't want
-          var clean = li[k].replace(/[.,-?!@#$%^&*()_~{}]/g, '');
+          var cleanWord = li[k].replace(/[.,-?!@#$%^&*()_~{}]/g, '');
+          console.log(cleanWord);          
+          
           // add to the hash
-          if (hash[clean] >= 1)
-            hash[clean] += 1;
-          else
-            hash[clean] = 1;
+          if (hash[cleanWord] >= 1){
+            hash[cleanWord] += 1;
+            }
+          else{
+            hash[cleanWord] = 1;
+            }
       }
   }
 
-  
+
   console.log('HASH ---------------');
   // this is the hash, unsorted but quantified
   for (i in hash)
     console.log(i + ' : ' + hash[i]);
-    
+  
   // console.log(hash[0]); // this numbered index will return 'undefined' in a hash map
 
-  // make a copy of the hash
+  // copy the list into an array "sorted"
   for (var key in hash){
      sorted.push([key, hash[key]]);
 
   }
 
+  
 // custom sort function
 // see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
   sorted.sort(function(a, b) {
@@ -63,6 +68,7 @@ function callback(poem) {
       else return 0;
       // return a < b ? 1 : (a > b ? -1 : 0);
   });
+
   // now we have a sorted hash function
   console.log('HASH SORTED---------------');
   
@@ -73,6 +79,11 @@ function callback(poem) {
 
 function draw() {
     background(255);
+        fill(255,0,0);
+    ellipse(mouseX, mouseY, 5,5);
+    fill(0,0,0);
+    ellipse(pmouseX, pmouseY, 5,5);
+
     translate(textX, height/2);
     
     for(var i=0; i<sorted.length; i++) {
@@ -86,6 +97,7 @@ function draw() {
         if (mouseIsPressed)
             line(0, txtSize* .25, 0, -txtSize* .75);
     }
+
 }
 
 function mouseDragged() {
