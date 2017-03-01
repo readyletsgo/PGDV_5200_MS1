@@ -6,10 +6,16 @@ var me =
 }
 
 
+
 // 2. Creating a new object
 var me = new Object();
 me.name = "John";
 me.age = 100;
+
+// cycle through it's attributes
+for(var key in me){
+	console.log(me[key]);
+}
 
 
 // 3. Multiple objects
@@ -29,6 +35,8 @@ var myObject = {
   interests: ['Sailing','Skiing','Programming']
 
 };
+
+
 
 // 5. Object with functions
 var phonebookEntry = {};
