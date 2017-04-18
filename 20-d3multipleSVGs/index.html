@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+    </head>
+    <style type="text/css">
+        svg {
+            font-family: sans-serif;
+        }
+    </style>
+    <body>
+        <script>
+            var min = 100000;
+            var max = 0;
+            
+            d3.tsv("LaborInNonAgricultSector.tsv", function(error, data) {
+              if (error) throw error;
+            
+                // console.log(data);
+                var mapX = d3.scaleLinear()
+                    .domain([0, 24])
+                    .range([0, 400]);
+                    
+                data.forEach(function(d) {
+                    for (var col = 0; col < 24; col++) {
+                        var val = Object.keys(d)[col];
+                        if (min > parseFloat(d[val]))
+                            min = parseFloat(d[val]);
+                        if (max < parseFloat(d[val]))
+                            max = parseFloat(d[val]);
+                    }
+                });
+                
+                console.log('min : ' + min + ' max: ' + max);
+                
+                var mapY = d3.scaleLinear()
+                    .domain([min, max])
+                    .range([300, 0]);
+                
+                d3.select('body')
+                    .selectAll('circle') // empty selection
+                    .data(data)  // bind data
+                    .enter()  // sticky data
+                    .append('svg')
+                        .attr('width', 400)
+                        .attr('height', 300)
+                        .each(function(d) {
+                            d3.select(this)
+                                .append('rect')
+                                    .attr('x', 0)
+                                    .attr('y', 0)
+                                    .attr('width', 400)
+                                    .attr('height', 300)
+                                    .attr('fill', 'white')
+                                    .attr('stroke', 'black')
+                            d3.select(this)   
+                                .append('text')
+                                    .attr('x', 10)
+                                    .attr('y', 25)
+                                    .text(function() { return d['Country Name']; })
+
+                            for (var col = 0; col < 24; col++) {
+                                d3.select(this) 
+                                    .append('circle') // add dom element svg circle
+                                        .attr('r', 5)
+                                        .attr('cx', function() { return mapX(col); })
+                                        .attr('cy', function() { return mapY(d[Object.keys(d)[col]]); })
+                                    .on('mouseover', function(d, i) { 
+                                        d3.select(this)
+                                            .style('fill', 'red')
+                                    });
+
+                            }
+                        })
+                
+            });
+        </script>
+    </body>
+</html>
