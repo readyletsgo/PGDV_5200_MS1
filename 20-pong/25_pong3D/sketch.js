@@ -45,7 +45,7 @@ function PongBall(myX, myY, myZ) {
   this.speedZ = random(-.5, .5);
   this.myScore = 0;
   this.vector = createVector();
-}
+
 
 // custom class function to display elements
 PongBall.prototype.display = function() {
@@ -66,76 +66,78 @@ PongBall.prototype.display = function() {
   pop();
 }
 
-// show x-y-z position in bounding box
-PongBall.prototype.displayPosition = function() {
-  if (mouseIsPressed && this.y < height - 50) {
-    stroke(128);
-    line(this.x, this.y, 0, this.x, this.y, height);
-    line(0, this.y, this.z, width, this.y, this.z);
-    line(this.x, 0, this.z, this.x, height, this.z);
+  // show x-y-z position in bounding box
+  this.displayPosition = function() {
+    if (mouseIsPressed && this.y < height - 50) {
+      stroke(128);
+      line(this.x, this.y, 0, this.x, this.y, height);
+      line(0, this.y, this.z, width, this.y, this.z);
+      line(this.x, 0, this.z, this.x, height, this.z);
+    }
+  }
+
+  // custom class function to update elements
+  this.update = function() {
+    var easing = 0.05;
+
+    if (sorted) {
+
+      var dx = this.targetX - this.x;
+      this.x += dx * easing;
+
+      var dy = this.targetY - this.y;
+      this.y += dy * easing;
+
+      var dz = this.targetZ - this.z;
+      this.z += dz * easing;
+
+    } else {
+
+      if (!paused) {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.z += this.speedZ;
+      }
+
+      if (this.x <= 5 || this.x >= width - 5) {
+        this.speedX *= -1;
+      }
+
+      if (this.z <= 5 || this.z >= height - 5) {
+        this.speedZ *= -1;
+      }
+
+      // top boundary
+      if (this.y <= 5) {
+        this.speedY *= -1;
+      }
+      // paddle
+      if (
+        abs(mouseX - this.x) < width / 8 &&
+        abs(mouseY - this.z) < height / 8 &&
+        this.y > height - 50 &&
+        this.y < height - 50 + this.speedY
+      ) {
+        this.speedY *= -1;
+        // increment global score
+        score++;
+        this.myScore++;
+        this.speedX *= 1.1; // 10 percent more speed horizontally
+        this.speedY *= 1.1;
+        this.speedZ *= 1.1;
+      }
+    }
+  }
+
+  // custom class function to sort its velocity vecotor 
+  // mapped horizontally according to global minima and maxima
+  this.sort = function() {
+    this.targetX = map(this.vector.mag(), min(magnitude), max(magnitude), 20, width - 20);
+    this.targetY = height / 2;
+    this.targetZ = 0;
   }
 }
 
-// custom class function to update elements
-PongBall.prototype.update = function() {
-  var easing = 0.05;
-
-  if (sorted) {
-
-    var dx = this.targetX - this.x;
-    this.x += dx * easing;
-
-    var dy = this.targetY - this.y;
-    this.y += dy * easing;
-
-    var dz = this.targetZ - this.z;
-    this.z += dz * easing;
-
-  } else {
-
-    if (!paused) {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      this.z += this.speedZ;
-    }
-
-    if (this.x <= 5 || this.x >= width - 5) {
-      this.speedX *= -1;
-    }
-
-    if (this.z <= 5 || this.z >= height - 5) {
-      this.speedZ *= -1;
-    }
-
-    // top boundary
-    if (this.y <= 5) {
-      this.speedY *= -1;
-    }
-    // paddle
-    if (
-      abs(mouseX - this.x) < width / 8 &&
-      abs(mouseY - this.z) < height / 8 &&
-      this.y > height - 50 &&
-      this.y < height - 50 + this.speedY
-    ) {
-      this.speedY *= -1;
-      // increment global score
-      score++;
-      this.myScore++;
-      this.speedX *= 1.1; // 10 percent more speed horizontally
-      this.speedY *= 1.1;
-      this.speedZ *= 1.1;
-    }
-  }
-}
-
-// custom class function to sort its velocity vecotor 
-// mapped horizontally according to global minima and maxima
-PongBall.prototype.sort = function() {
-  this.targetX = map(this.vector.mag(), min(magnitude), max(magnitude), 20, width - 20);
-  this.targetY = height / 2;
-  this.targetZ = 0;
-}
 
 function windowResized() {
   // position canvas in middle of screen
